@@ -28,7 +28,73 @@ export function Navigation() {
 
 ### Adding the component
 We can now use this component anywhere in our project. As it is reusable, we could add it to every single page of our project.
-However, if we want it on every page, it would be very inefficient to have to add that on every page ourselves.
+
+Let's add it to our home page! Add it in `app/page.tsx`
+```tsx
+export default function Home() {
+  return (
+    <div>
+      <Navigation/>
+      Home
+    </div>
+  );
+}
+```
+
+### Styling the component
+The component looks rather empty at the moment.
+Let's add some styling to classname to make it an actual navigation bar.
+We make use of `tailwind` in this project, which let's us add styling on the fly by adding classes to the `className` property.
+Let's add a few to the `<nav>` in `components/navigation.tsx`:
+- `bg-background` tells tailwind that the background 'bg' needs to have the color 'background' (which is white)
+- `border-b` adds a border line at the bottom.
+- `flex`, `flex-row` & `items-center` causes the content of the navigation bar to be displayed in a row and in the middle of the height of the bar.
+- `fixed`, `top-0`, `z-10` & `w-full` make sure the bar is always displayed at the top of the screen taking up the full width of the page and in front of any content.
+```tsx
+export function Navigation() {
+  return (
+    <nav className='fixed top-0 z-10 w-full border-b flex flex-row items-center bg-background'>
+      ING Webshop
+    </nav>
+  )
+}
+```
+We can also add a logo to make it prettier. We'll use the Next.js Image component for that.
+Make sure to import it to the file by adding:
+```tsx
+import Image from "next/image";
+```
+This component looks in the `/public` directory, so add the `logo.png` to the `/public` directory to use it.
+The `Image` component expects a few required properties:
+- `src` the path to the image, relative to /public
+- `alt` the text to show, when the image can't be loaded, or for accessibility features
+- `width` & `height` the width and height in pixels
+
+After adding the `<Image>` with the required properties, our navigation component looks like this:
+
+```tsx
+import Image from "next/image";
+
+export function Navigation() {
+  return (
+    <nav className="fixed top-0 z-10 w-full border-b flex flex-row items-center bg-background">
+      <Image
+        src="/logo.png"
+        alt="logo"
+        width="50"
+        height="50"
+      />
+      ING Webshop
+    </nav>
+  )
+}
+```
+
+You can see the changes in the browser at http://localhost:3000
+
+### Using layouts
+
+We added the Navigation to our home page. However, if we want it on every page, it would be very inefficient to have to add that on every page ourselves.
 In addition, our webpage would then have to render the navigation item again for every page, which would be very inefficient.
 
 The `layout.tsx` page is perfect for components that we want to keep between pages. It is rendered once, and stays there when navigating between pages.
@@ -55,56 +121,16 @@ Also put the `{children}` inside of a `<div>` with `classname="mt-16 w-full just
 - `mt-16` adds some space between the child pages and the top of the screen
 - `w-full` & `justify-items-center` cause the child page to be visible in the middle of the screen.
 
+We can now remove the `<Navigation>` component from `app/page.tsx`.
 The navigation bar will now be visible in the preview in the browser.
 
-### Styling the component
-Also add some styling to classname to make the navigations content display side by side and give it a border and background color.
-- `bg-background` tells tailwind that the background 'bg' needs to have the color 'background' (which is white)
-- `border-b` makes sure there is a border line at the bottom.
-- `flex`, `flex-row` & `items-center` make sure the content of the navigation bar are displayed in a row and in the middle of the height of the bar.
-- `fixed`, `top-0`, `z-10` & `w-full` make sure the bar is always displayed at the top of the screen taking up the full width of the page and in front of any content.
-```tsx
-export function Navigation() {
-  return (
-    <nav className='fixed top-0 z-10 w-full border-b flex flex-row items-center bg-background'>
-      ING Webshop
-    </nav>
-  )
-}
-```
-We can also add a logo to make it prettier. We'll use the Next.js Image component for that.
-This component looks in the `/public` directory. Add the `logo.png` to the `/public` directory to use it.
-The `Image` component expects a few required properties:
-- `src` the path to the image, relative to /public
-- `alt` the text to show, when the image can't be loaded, or for accessibility features
-- `width` & `height` the width and height in pixels
-
-After adding the `<Image>` with the required properties, our navigation component looks like this:
-
-```tsx
-import Image from "next/image";
-
-export function Navigation() {
-  return (
-    <nav className="fixed top-0 z-10 w-full border-b flex flex-row items-center bg-background">
-      <Image
-        src="/logo.png"
-        alt="logo"
-        width="50"
-        height="50"
-      />
-      ING Webshop
-    </nav>
-  )
-}
-```
 
 ### Navigation links
-The only thing missing is actual navigation links. Let's add those now.
+The only thing missing is actual navigation links. Let's add those now. Get back to `components/Navigation.tsx`.
 We don't want to just put hyperlinks on the page, as this would request a full rerender of the page from our webserver.
 Instead, we want Next.js to handle the routing by using the `Link` component.
 Let's add a new `<div>` element to our navigation bar and add a `Home`, `Shop` & `Cart` item.
-We can put some text inside which will be displayed. and the link to the page to the page the button should navigate to must be put in `href` (this can be a relative link but could result in unintended results).
+We can put some text inside which will be displayed. The link to the page to the page the button should navigate to must be put in `href` (this can be a relative link but could result in unintended results).
 
 ```tsx
 import 'next/link';
@@ -114,13 +140,13 @@ import 'next/link';
     ING Webshop
   
   <div>
-    <Link href="/">
-      Home
+    <Link href="/">     // navigates to our webpage,
+      Home              // for example www.ourWebshop.com/
     </Link>
-    <Link href="/shop">
+    <Link href="/shop"> // navigates to www.ourWebshop.com/shop
       Shop
     </Link>
-    <Link href="/cart">
+    <Link href="/cart"> // navigates to www.ourWebshop.com/cart
       Cart
     </Link>
   </div>
