@@ -1,7 +1,7 @@
 ## Step 2 - Navigation
 Let's make our first component.
 We first want to add some navigation for our users.
-In your project directory, create a `ui` directory, here we will store our UI-components, and create a `navigation.tsx` file.
+In your project directory, create a `components` directory, here we will store our UI-components, and create a `navigation.tsx` file.
 ```shell
 mkdir -p components
 touch components/navigation.tsx
@@ -11,7 +11,10 @@ touch components/navigation.tsx
 In this file we will create the `navigation component`.
 First we need to define an exported function for React to find. We can choose our own name.
 This function needs to return some form of `html`*. Let's make it a `<nav>` with our title in it.
-Why use a `<nav>`? This tells browsers that it is a navigation element, which is useful for accessibility features.
+
+> Why use a `<nav>` and not just a `<div>`?
+> 
+> `<nav>` tells browsers that it is a navigation element, which is useful for accessibility features.
 ```tsx
 export function Navigation() {
   return (
@@ -21,18 +24,19 @@ export function Navigation() {
   )
 }
 ```
-\* More accurately, it needs to return a React element. Typing some HTML will be recognized as a React element.
+\* This is actually JSX, a more strict form of html which React uses, we'll see the differences later.
 
 ### Adding the component
 We can now use this component anywhere in our project. As it is reusable, we could add it to every single page of our project.
 However, if we want it on every page, it would be very inefficient to have to add that on every page ourselves.
-In addition, our webpage would then also have to render the navigation item again for every page, which would be very inefficient.
-The `layout.tsx` page is perfect for components that we want to keep between pages. The layout is rendered once, and stays there when navigating between pages.
+In addition, our webpage would then have to render the navigation item again for every page, which would be very inefficient.
+
+The `layout.tsx` page is perfect for components that we want to keep between pages. It is rendered once, and stays there when navigating between pages.
 Let's add our `Navigation` component here.
 
-In the `app/layout.tsx` file you will find a `{children}` variable. This is where child pages of the layout will be rendered.
+In the `app/layout.tsx` file you will find a `{children}`* variable. This is where child pages of the layout will be rendered.
 In other words, every page that uses this layout will be rendered in this spot inside the layout. Let's add our `Navigation` component above it.
-Also put the `{children}` inside of a `<div>` with `classname="mt-16 w-full justify-items-center"`
+Also put the `{children}` inside of a `<div>` with `classname="mt-16 w-full justify-items-center"`. This is important for layout reasons :)
 ```tsx
 ...
 <html lang="en">
@@ -47,6 +51,7 @@ Also put the `{children}` inside of a `<div>` with `classname="mt-16 w-full just
 </html>
 ...
 ```
+\* We are writing in JSX here, a form of HTML. `{...}` let's us escape out of JSX back into TypeScript, letting us use the `children` variable here.
 - `mt-16` adds some space between the child pages and the top of the screen
 - `w-full` & `justify-items-center` cause the child page to be visible in the middle of the screen.
 
@@ -69,7 +74,12 @@ export function Navigation() {
 ```
 We can also add a logo to make it prettier. We'll use the Next.js Image component for that.
 This component looks in the `/public` directory. Add the `logo.png` to the `/public` directory to use it.
-Our navigation component now looks like this:
+The `Image` component expects a few required properties:
+- `src` the path to the image, relative to /public
+- `alt` the text to show, when the image can't be loaded, or for accessibility features
+- `width` & `height` the width and height in pixels
+
+After adding the `<Image>` with the required properties, our navigation component looks like this:
 
 ```tsx
 import Image from "next/image";
