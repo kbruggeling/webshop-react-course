@@ -198,6 +198,9 @@ The plan is to get a list of products from our backend API.
 As an example, we'll use https://fakestoreapi.com/products, which gives us a json response with 20 products.
 
 We'll first have to define what we expect our product to look like by defining a new Type.
+Let's do this in `app/shop/page.tsx` as that is where we'll use it for now.
+If we expect this project to be bigger, we might want to move them to a more centralized place.
+
 The API returns items with a title, a price and a description (and some other stuff we'll not use for now), so let's add those properties to the type:
 
 ```tsx
