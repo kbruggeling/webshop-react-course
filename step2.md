@@ -31,6 +31,8 @@ We can now use this component anywhere in our project. As it is reusable, we cou
 
 Let's add it to our home page! Add it in `app/page.tsx`
 ```tsx
+import {Navigation} from "@/components/navigation"
+
 export default function Home() {
   return (
     <div>
@@ -104,6 +106,7 @@ In the `app/layout.tsx` file you will find a `{children}`* variable. This is whe
 In other words, every page that uses this layout will be rendered in this spot inside the layout. Let's add our `Navigation` component above it.
 Also put the `{children}` inside of a `<div>` with `classname="mt-16 w-full justify-items-center"`. This is important for layout reasons :)
 ```tsx
+import {Navigation} from "@/components/navigation"
 ...
 <html lang="en">
   <body

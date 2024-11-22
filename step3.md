@@ -223,6 +223,22 @@ if (!response.ok) {
 const products = (await response.json()) as Product[];
 ```
 
+We need this data in our Shop page, so our `app/shop/page.tsx` file.
+Add it to the `Shop` function. Now that we've added an `await` function, we need to make the function asynchronous:
+```tsx
+...
+export default async function Shop() {
+  const response = await fetch("https://fakestoreapi.com/products")
+  if (!response.ok) {
+    throw new Error('Unable to fetch product list')
+  }
+
+  const products = (await response.json()) as Product[];
+
+  return(
+...
+```
+
 We can then go over the list and create an instance of our Product component for each item.
 (It may  have been a good idea to not give the same name to the Type and the Component to prevent confusion, but the language knows what we mean in this instance).
 The `map()` function does exactly this. We can give a variable name to every item in the list, and then define what map should return for each item in the list.
@@ -266,14 +282,14 @@ export type Product = {
   description: string;
 }
 
-const response = await fetch("https://fakestoreapi.com/products")
-if (!response.ok) {
-  throw new Error('Unable to fetch product list')
-}
+export default async function Shop() {
+  const response = await fetch("https://fakestoreapi.com/products")
+  if (!response.ok) {
+    throw new Error('Unable to fetch product list')
+  }
 
-const products = (await response.json()) as Product[];
+  const products = (await response.json()) as Product[];
 
-export default function Shop() {
   return(
     <div className="space-y-4 p-4">
       {products.map(product => {
@@ -299,7 +315,7 @@ If the API call takes a long time, it might look like nothing is happening on th
 Our rendered components, like the Navigation bar, will still be usable during this time, but it might be nice to show the user that stuff is happening in the background.
 
 While pages are loading, Next.js will look for the closest `loading.tsx` and display that in the meantime (similarly to how the `error.tsx` & `not-found.tsx` work).
-We can add one in the shop directory. You can make it look like anything, it can be as intricate as you want.
+We can add a `loading.tsx` one in the shop directory. You can make it look like anything, it can be as intricate as you want.
 Or just a simple indication that something is loading:
 
 ```tsx
