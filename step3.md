@@ -325,3 +325,21 @@ export default function Loading() {
   )
 }
 ```
+
+Depending on the internet speed, you might see the loading screen when navigating to the shop.
+You can make it more clear by adding a `await wait(5000)` before loading the page:
+
+```tsx
+export default async function Shop() {
+  const response = await fetch("https://fakestoreapi.com/products")
+  if (!response.ok) {
+    throw new Error('Unable to fetch product list')
+  }
+  await wait(5000)
+
+  const products = (await response.json()) as Product[];
+  return(
+    <div className="space-y-4 p-4">
+      {products.map(product => {
+...
+```
