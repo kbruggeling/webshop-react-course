@@ -139,8 +139,78 @@ This button will not do anything yet, but we can add an `onClick` attribute that
 ```
 The `addToCart` function needs to do an api call to our backend.
 However, as we are now on the client side of things, we don't want to just directly call our backend.
-So we will make an intermediate api in our frontend
+So we will make an intermediate api in our frontend that does the api call to our backend.
 
+### /app/api/cart/route.ts
+We can create an api directory with a `cart` endpoint (directory).
+In the cart directory, instead of a `page.tsx`, create a `route.ts`, as this is not a normal page.
 
-create basket call
-create api/basket
+The API endpoint needs to accept POST requests, which we can do by simple exporting a `POST()` function.
+It will make calls to our golang backend so we need it to be async.
+And, as it is an API endpoint, it turns the request the API endpoint receives into a parameter which we can name ourselves:
+```tsx
+export async function POST(req: NextRequest) {
+  
+}
+```
+The req parameter contains the request make to the endpoint, including the url.
+This means we can put variables in our API call that we can then use, a product id for example.
+
+We can retrieve such variables, which are called `search parameters` by:
+```tsx
+  const id = req.nextUrl.searchParams.get("id")
+  console.log(id)
+```
+This will search our request url for a variable `id`.
+We then log it to check if everything is working
+
+### /components/saleDetail.tsx
+We'll make the `addToCart()` function that will do the call to our freshly made api endpoint:
+```tsx
+async function addToCart() {
+  const response = await fetch(`/api/basket?id=${encodeURIComponent(product.id)}`, {
+    method: 'POST',
+  })
+}
+```
+Then call the function when our button is pressed:
+```tsx
+<button
+  className="p-2 bg-blue-500 rounded"
+  onClick={addToCart}
+>
+```
+Pressing the button should now log the product id.
+
+### /app/api/cart/route.ts
+Adding a product to our cart entails a few calls to our backend.
+We need to make sure a cart/basket exists, then add a product to it, and then maybe check if it is successfully added.
+`Task: Add these 3 api calls to the '/app/api/cart/route.ts' POST() function.
+Check our backends '/handlers/handler.go' to check the endpoints needed.
+Also check if each api calls response is 'ok' before continueing.
+Finally return the json response of the last response so our new frontend api call returns something:`
+```tsx
+const data = await res.json() //assuming your backend api call response is stored in 'res'
+return Response.json(data)
+```
+
+### /components/saleDetail.tsx
+Let's check the response of our new API endpoint in the `addToCart()` function.
+Check the response and log its results:
+```tsx
+async function addToCart() {
+  const response = await fetch(`/api/basket?id=${encodeURIComponent(product.id)}`, {
+    method: 'POST',
+  })
+  if (!response.ok) {
+    console.log(response.statusText)
+    return
+  }
+  const data = await response.json()
+  console.log(data)
+}
+```
+Clicking the button should log the basket json from our backend API.
+You can right click the page and press `inspect` to view the console, as it is logged in the client side.
+`option+command+i` also opens this tab.
+We now have a shop page, with a list of products which, when clicked, navigate to a product detail page with a button to add it to our cart.
